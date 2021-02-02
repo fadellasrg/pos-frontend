@@ -6,7 +6,13 @@
             <input type="text" v-model="formProducts.name" class="form-control" placeholder="Name">
             <input type="text" v-model="formProducts.image" class="form-control" placeholder="Image">
             <input type="text" v-model="formProducts.price" class="form-control" placeholder="Price">
-            <input type="text" v-model="formProducts.id_category" class="form-control" placeholder="ID_category">
+            <!-- <input type="text" v-model="formProducts.id_category" class="form-control" placeholder="ID_category"> -->
+            <select v-model="formProducts.id_category" style="margin-top: 10px; width: 100%" class="form-select form-select-lg mb-3">
+              <option disabled value="">Category</option>
+              <option value="1">Dessert</option>
+              <option value="2">Drink</option>
+              <option value="3">Food</option>
+            </select>
         </div>
         <button class="btn add-btn" v-on:click="addProduct()">Add</button>
         <button class="btn cancel-btn" v-on:click="hideModalAdd()">Cancel</button>

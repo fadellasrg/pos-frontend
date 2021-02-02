@@ -41,6 +41,7 @@
                 <img :src="result.image" class="figure-img img-fluid rounded" :alt="result.category" />
                 <div >Price: {{result.price}}</div>
                 <div>Category: {{result.category}}</div>
+                <button @click="deleteData()" id="delete-btn" type="button" class="btn">Delete</button>
               <!-- </div> -->
             </div>
           </div>
@@ -54,7 +55,7 @@ export default {
   data () {
     return {
       id: this.$route.params.id,
-      isLoading: true,
+      // isLoading: true,
       result: {},
       btnStripShow: false
     }
@@ -68,8 +69,8 @@ export default {
   methods: {
     detailData: function () {
       Axios.get('http://localhost:3000/product/' + this.id).then((response) => {
-        console.log(response.data)
-        this.result = response.data[0]
+        // console.log(response.data)
+        this.result = response.data.data[0]
       }).catch((err) => {
         console.log(err)
       })
@@ -79,6 +80,29 @@ export default {
     },
     btnStrip: function () {
       this.btnStripShow = !this.btnStripShow
+    },
+    deleteData: function () {
+      const alert = confirm('Delete this product?')
+      if (alert === true) {
+        Axios.delete('http://localhost:3000/products/' + this.id).then((response) => {
+          console.log(response)
+          this.$router.push({ path: '/' })
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+    },
+    convertToRupiah: function (digit) {
+      const str = digit.toString().split('').reverse().join('')
+      let convert = ''
+      let rupiah = ''
+      for (let i = 0; i < str.length; i++) {
+        if (i % 3 === 0) {
+          convert += str.substr(i, 3) + '.'
+        }
+      }
+      rupiah += 'Rp. ' + convert.split('', convert.length - 1).reverse().join('')
+      return rupiah
     }
   }
 }
@@ -92,13 +116,18 @@ export default {
   height: 32px;
   width: auto;
 }
+#delete-btn{
+  background-color: rgba(240, 51, 120, 0.8);
+  color: rgba(255,255,255, 0.8);
+  margin: 0;
+  margin-top: 5px;
+}
 img{
   height: 190px;
   width: 220px;
 }
 div{
   font-family: 'Noto Sans JP', sans-serif;
-  font-size: 20px;
 }
 .img-thumbnail{
   margin-left: 10px;
@@ -107,11 +136,11 @@ div{
   height: 50px;
 }
 .col-md-9 div{
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 }
 .col-md-7 div{
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
 }
 .name{

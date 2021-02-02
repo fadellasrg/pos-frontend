@@ -38,11 +38,16 @@
                 <input type="text" v-model="listEdit.name" class="form-control" placeholder="Name">
                 <input type="text" v-model="listEdit.image" class="form-control" placeholder="Image">
                 <input type="text" v-model="listEdit.price" class="form-control" placeholder="Price">
-                <input type="text" v-model="listEdit.id_category" class="form-control" placeholder="ID_category">
+                <select v-model="listEdit.id_category" style="margin-top: 0px; width: 98%" class="form-select form-select-lg mb-3">
+                  <option disabled value="">Category</option>
+                  <option value="1">Dessert</option>
+                  <option value="2">Drink</option>
+                  <option value="3">Food</option>
+                </select>
                 <!-- </div> -->
               </div>
               <router-link to="/">
-              <button class="btn add-btn" v-on:click="update()">Update</button>
+                <button class="btn add-btn" v-on:click="update()">Update</button>
               </router-link>
               <router-link to="/">
                 <button class="btn cancel-btn">Cancel</button>
@@ -61,12 +66,6 @@ export default {
     return {
       id: this.$route.params.id,
       btnStripShow: false,
-      formProducts: {
-        name: '',
-        image: '',
-        price: '',
-        id_category: ''
-      },
       listEdit: {
         name: '',
         image: '',
@@ -74,6 +73,9 @@ export default {
         id_category: ''
       }
     }
+  },
+  mounted () {
+    this.getProduct()
   },
   methods: {
     btnStrip: function () {
@@ -83,8 +85,23 @@ export default {
       this.$refs['my-modal'].hide()
     },
     update: function () {
-      Axios.patch('http://localhost:3000/products/' + this.id, this.listEdit).then((response) => {
+      const finalData = {
+        name: this.listEdit.name,
+        image: this.listEdit.image,
+        price: this.listEdit.price,
+        id_category: this.listEdit.id_category
+      }
+      console.log(this.listEdit)
+      Axios.patch('http://localhost:3000/products/' + this.id, finalData).then((response) => {
         console.log(response)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    getProduct: function () {
+      Axios.get('http://localhost:3000/product/' + this.id).then((response) => {
+        // this.listProducts = response.data
+        this.listEdit = response.data.data[0]
       }).catch((err) => {
         console.log(err)
       })
